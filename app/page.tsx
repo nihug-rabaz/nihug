@@ -1,3 +1,4 @@
+import AboutSection from "@/components/AboutSection";
 import BranchesShowcaseSection from "@/components/BranchesShowcaseSection";
 import HeroScrollVideo from "@/components/HeroScrollVideo";
 import OceanFooterSection from "@/components/OceanFooterSection";
@@ -14,6 +15,7 @@ export default function Home() {
       <ScrollCapabilitiesSection />
       <ProjectsShowcaseSection />
       <BranchesShowcaseSection />
+      <AboutSection />
       {ENDING === "roots" ? <RootsDescentSection /> : <OceanFooterSection />}
     </main>
   );
