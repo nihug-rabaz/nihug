@@ -3,9 +3,59 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Compass, Quote, Target } from "lucide-react";
+import {
+  Compass,
+  Quote,
+  Target,
+  Bot,
+  Sparkles,
+  Clock,
+  BookOpen,
+  Network,
+  Plug
+} from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const capabilities = [
+  "פיתוח תוכנה מקצה לקצה",
+  "בינה מלאכותית וצ\u05f4אטבוטים",
+  "אפיון וחווית משתמש (UX/UI)",
+  "שירותים דיגיטליים ומערכות תפעוליות"
+];
+
+const achievements = [
+  {
+    icon: Bot,
+    title: "רב בוט",
+    text: "צ\u05f4אטבוט מבוסס בינה מלאכותית המספק מענה הלכתי וארגוני זמין בכל רגע."
+  },
+  {
+    icon: Sparkles,
+    title: "תפילון חכם",
+    text: "כלי תפילה דיגיטלי חכם המותאם אישית לזמן, למקום ולצרכי המשתמש."
+  },
+  {
+    icon: Clock,
+    title: "זמני היום",
+    text: "מערכת מדויקת לחישוב והצגת זמני היום ההלכתיים בכל נקודה בארץ."
+  },
+  {
+    icon: BookOpen,
+    title: "תורת המחנה",
+    text: "הנגשה דיגיטלית של גופי הידע התורניים והמבצעיים לחיילי החיל."
+  },
+  {
+    icon: Plug,
+    title: "\u05deמשקי API",
+    text: "תשתית ממשקים פתוחה לחיבור והזרמת מידע בין מערכות הארגון."
+  },
+  {
+    icon: Network,
+    title: "מערכות אחודות ורשתיות",
+    text: "מעבר מארגון מידע מקומי לתשתית רשתית אחודה הזמינה לכלל החיל."
+  }
+];
 
 const ratachPoints = [
   "מערכות המידע הינן כלי תומך למימוש משימות הרבנות הצבאית",
@@ -84,15 +134,58 @@ export default function AboutSection() {
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-pretty text-base leading-relaxed text-[#fbfcf3]/72 sm:text-lg">
             {
-              "הוקם כדי לממש את חזון חיל הרבנות הצבאית להיות ארגון לומד, החותר לשיפור מתמיד. התחום פועל בתוך 'מערך תבלי\u05f4ן' – תחקור, בקרה, למידה, ייעוץ ופיתוח ארגוני, ניהול ידע."
+              "תחום ניהו\u05f4ג הוא כבר לא רק תחום של ניהול ידע והטמעת מערכות קטנות – הוא בית תוכנה מלא, המוביל פיתוח, בינה מלאכותית, אפיון, חווית משתמש ושירותים דיגיטליים עבור חיל הרבנות הצבאית."
             }
           </p>
           <p className="mx-auto mt-5 max-w-3xl text-pretty text-sm leading-relaxed text-[#fbfcf3]/60 sm:text-base">
             {
-              "התחום מטפל בניהול הידע הארגוני והנגשתו – \u201cבית התוכנה\u201d המורכב ממטמיעים ומפתחים, ומפתח מערכות תפעוליות כגון מעגל השנה וניהול אזכרות. הוא מוביל תהליכי ארגון, ניהול, הטמעה והנגשה של הידע במטה הרבנות הצבאית, ומייצר התאמה לצרכי הרבנות הצבאית בזמן אמת."
+              "התחום הוקם כדי לממש את חזון החיל להיות ארגון לומד, ופועל בתוך 'מערך תבלי\u05f4ן'. מצוות מטמיעים ומפתחים, התחום מוביל תהליכי ארגון, ניהול, הטמעה והנגשה של הידע במטה הרבנות הצבאית, ומייצר התאמה לצרכי החיל בזמן אמת."
             }
           </p>
+          <ul className="mx-auto mt-8 flex max-w-3xl flex-wrap justify-center gap-2.5">
+            {capabilities.map((cap, i) => (
+              <li
+                key={i}
+                className="rounded-full border border-[#fbfcf3]/15 bg-[#fbfcf3]/[0.06] px-4 py-2 text-[13px] font-semibold text-[#fbfcf3]/85"
+              >
+                {cap}
+              </li>
+            ))}
+          </ul>
         </header>
+
+        {/* Achievements of the past year */}
+        <div data-about-reveal className="mb-16 sm:mb-24">
+          <div className="mb-8 flex items-center gap-3">
+            <span className="grid h-11 w-11 place-items-center rounded-2xl bg-[#fbfcf3]/10 text-[#EAB308]">
+              <Sparkles className="h-5 w-5" aria-hidden="true" />
+            </span>
+            <div>
+              <h3 className="text-2xl font-bold sm:text-3xl">העשייה של השנה האחרונה</h3>
+              <p className="mt-1 text-sm text-[#fbfcf3]/55">
+                מוצרים ותשתיות שפיתחנו והשקנו עבור החיל
+              </p>
+            </div>
+          </div>
+          <ul className="grid gap-px overflow-hidden rounded-3xl bg-[#fbfcf3]/10 sm:grid-cols-2 lg:grid-cols-3">
+            {achievements.map((item, i) => {
+              const Icon = item.icon;
+              return (
+                <li key={i} className="bg-[#142111] p-6 sm:p-7">
+                  <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#fbfcf3]/10 text-[#22D3EE]">
+                    <Icon className="h-5 w-5" aria-hidden="true" />
+                  </span>
+                  <h4 className="mt-4 text-lg font-bold text-[#fbfcf3]">
+                    {item.title}
+                  </h4>
+                  <p className="mt-2 text-[14px] leading-relaxed text-[#fbfcf3]/70">
+                    {item.text}
+                  </p>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
 
         {/* Rat"ch */}
         <div data-about-reveal className="mb-16 sm:mb-24">
