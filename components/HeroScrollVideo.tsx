@@ -18,7 +18,7 @@ import { registerLenis } from "@/lib/smoothScroll";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const SCROLL_PX_PER_FRAME = 16;
+const SCROLL_PX_PER_FRAME = 32;
 const OLD_FRAME_COUNT = 302;
 const HERO_VIDEO_HOLD_PX = 900;
 const FRAME_SCROLL_PX = FRAME_COUNT * SCROLL_PX_PER_FRAME;
@@ -284,8 +284,8 @@ export default function HeroScrollVideo() {
         transformOrigin: "50% 50%"
       });
 
-      const heroFadeEnd = Math.max(0.05, 1 - 80 / FRAME_COUNT);
-      const heroTransitionStart = Math.max(0.965, 1 - 10 / FRAME_COUNT);
+      const heroFadeEnd = Math.max(0.05, 1 - 40 / FRAME_COUNT);
+      const heroTransitionStart = Math.max(0.965, 1 - 5 / FRAME_COUNT);
       const heroTransitionDuration = 1 - heroTransitionStart;
 
       timeline = gsap.timeline({ paused: true });

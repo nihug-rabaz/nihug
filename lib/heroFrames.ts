@@ -1,11 +1,12 @@
-export const FRAME_COUNT = 360;
+// 180 frames at 1920x1080 WebP (every 2nd frame of the original 360-frame 4K export).
+export const FRAME_COUNT = 180;
 export const FRAME_DURATION = 12;
 export const FRAME_BASE_PATH = "/hero-frames/frame_";
 export const LAST_FRAME_INDEX = FRAME_COUNT;
-export const LAST_FRAME_PATH = `${FRAME_BASE_PATH}${String(LAST_FRAME_INDEX).padStart(4, "0")}.jpg`;
+export const LAST_FRAME_PATH = `${FRAME_BASE_PATH}${String(LAST_FRAME_INDEX).padStart(4, "0")}.webp`;
 
 export function framePath(index: number) {
-  return `${FRAME_BASE_PATH}${String(index).padStart(4, "0")}.jpg`;
+  return `${FRAME_BASE_PATH}${String(index).padStart(4, "0")}.webp`;
 }
 
 export function frameIndexFromProgress(progress: number) {

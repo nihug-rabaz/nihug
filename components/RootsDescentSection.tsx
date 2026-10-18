@@ -5,11 +5,12 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { animate, createScope, stagger, utils } from "animejs";
 import type { Scope } from "animejs";
+import { LAST_FRAME_PATH } from "@/lib/heroFrames";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const SURFACE_SRC = "/hero-frames/frame_0360.jpg";
-const LOGO_SRC = "/hero-frames/logo2 (1).png";
+const SURFACE_SRC = LAST_FRAME_PATH;
+const LOGO_SRC = "/hero-frames/logo2.webp";
 const GREENS = ["#3f9d4f", "#56b85f", "#2f8443", "#6cc36e", "#48a857"];
 
 const TEXT_STAGES: { id: string; lines: string[]; at: number; hold: number; withLogo?: boolean }[] = [

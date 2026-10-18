@@ -28,7 +28,7 @@ export const projectsCatalog = new ProjectsCatalog([
     description:
       "ממשק שיחה חכם, חיפוש ידע מהיר ומענה אישי לחיילים ולמפקדים בכל זמן.",
     category: "ai",
-    image: "/projects/5.png",
+    image: "/projects/5.webp",
     logo: "/images/ravbot-logo.png",
     year: "2025",
     featured: true,
@@ -42,7 +42,7 @@ export const projectsCatalog = new ProjectsCatalog([
     description:
       "פלטפורמה לטיפול בפניות, מעקב סטטוס וניהול הזכאויות של הפרט מקצה לקצה.",
     category: "platform",
-    image: "/projects/1.png",
+    image: "/projects/1.webp",
     logo: "/project-logos/merkaz-haprat.png",
     year: "2024",
     tileSize: "wide",
@@ -55,7 +55,7 @@ export const projectsCatalog = new ProjectsCatalog([
     description:
       "מערכת לניהול לימוד יומי, תכנים תורניים וסיומי מסכת לחיילי הרבנות הצבאית.",
     category: "web",
-    image: "/projects/6h.png",
+    image: "/projects/6h.webp",
     logo: "/project-logos/hadran.png",
     year: "2025",
     tileSize: "tall",
@@ -68,7 +68,7 @@ export const projectsCatalog = new ProjectsCatalog([
     description:
       "ממשק דיגיטלי מאובטח למילוי, חתימה והעברה של טופס 246 בצורה מסודרת ויעילה.",
     category: "web",
-    image: "/projects/8h.png",
+    image: "/projects/8h.webp",
     year: "2024",
     tileSize: "tall",
     tags: ["טפסים", "אבטחה", "תהליך"]
@@ -80,7 +80,7 @@ export const projectsCatalog = new ProjectsCatalog([
     description:
       "תיעוד מובנה של ממצאים מהשטח, ניהול תיקים והפקת דוחות בזמן אמת.",
     category: "platform",
-    image: "/projects/7h.png",
+    image: "/projects/7h.webp",
     year: "2024",
     tileSize: "tall",
     tags: ["תיעוד", "ממצאים", "דוחות"]
@@ -92,7 +92,7 @@ export const projectsCatalog = new ProjectsCatalog([
     description:
       "ניהול תיקי חללים, חיבור לכל הגורמים המטפלים ומעקב רציף ברגישות מלאה.",
     category: "platform",
-    image: "/projects/4.png",
+    image: "/projects/4.webp",
     logo: "/project-logos/chizuk.png",
     year: "2024",
     tileSize: "wide",
@@ -105,10 +105,238 @@ export const projectsCatalog = new ProjectsCatalog([
     description:
       "תיאום סיורים, ניהול קבוצות, אישורים ולוחות זמנים — מכל קצוות הארגון במקום אחד.",
     category: "web",
-    image: "/projects/2.png",
+    image: "/projects/2.webp",
     logo: "/project-logos/hazuti.png",
     year: "2024",
     tileSize: "std",
     tags: ["סיורים", "תיאום", "ניהול"]
+  }),
+  new ProjectItem({
+    id: "tefilon",
+    name: "תפילון",
+    tagline: "סידור תפילה דיגיטלי",
+    description:
+      "אפליקציית PWA לתפילות היומיות בנוסח ספרד ועדות המזרח, עם לוח עברי, זמני היום וחוקי היום.",
+    category: "mobile",
+    image: "/projects/tefilon.webp",
+    year: "2026",
+    tileSize: "tall",
+    tags: ["תפילה", "PWA", "זמנים"]
+  }),
+  new ProjectItem({
+    id: "moreshet",
+    name: "מורשת הרבנות",
+    tagline: "הרבנות הצבאית במלחמת התקומה",
+    description:
+      "אתר תיעוד היסטורי של פעילות הרבנות הצבאית במלחמת העצמאות — סיפורים, דמויות וסרטונים.",
+    category: "web",
+    image: "/projects/moreshet.webp",
+    year: "2025",
+    tileSize: "wide",
+    tags: ["היסטוריה", "תיעוד", "מורשת"]
+  }),
+  new ProjectItem({
+    id: "tarahit",
+    name: "תרחית",
+    tagline: "מרכז לוגיסטי לזיהוי נספים",
+    description:
+      "ניהול ממצאים וקליטות, שרשרת זיהוי ובקרה, תמונת מצב ודוחות — וממשיכה לעבוד גם ללא רשת.",
+    category: "platform",
+    image: "/projects/tarahit.webp",
+    year: "2026",
+    tileSize: "std",
+    tags: ["חללים", "זיהוי", "לוגיסטיקה"]
+  }),
+  new ProjectItem({
+    id: "haborer",
+    name: "הבורר",
+    tagline: "מערכת ניטור והכרעה",
+    description:
+      "מערכת ניטור והכרעה מחבילת מערכות החללים האזרחיים, לצד אומ״ץ ותרחית.",
+    category: "platform",
+    image: "/projects/haborer.webp",
+    year: "2026",
+    tileSize: "std",
+    tags: ["ניטור", "הכרעה", "חללים"]
+  }),
+  new ProjectItem({
+    id: "rabanut-360",
+    name: "רבנות 360",
+    tagline: "הלכה, שירות ושו״ת",
+    description:
+      "אפליקציה לחיילי צה״ל עם תכני הלכה, שירותי הרבנות ושאלות ותשובות — הכול במקום אחד.",
+    category: "mobile",
+    image: "/projects/rabanut-360.webp",
+    year: "2026",
+    tileSize: "tall",
+    tags: ["הלכה", "שו״ת", "שירותים"]
+  }),
+  new ProjectItem({
+    id: "lahaka",
+    name: "להקת הרבנות",
+    tagline: "הגשת מועמדות ללהקה",
+    description:
+      "שער הכניסה למלש״בים: הגשת מועמדות ללהקת הרבנות הצבאית, מעקב סטטוס, תמונות וקליפים.",
+    category: "web",
+    image: "/projects/lahaka.webp",
+    year: "2026",
+    tileSize: "wide",
+    tags: ["מוזיקה", "מועמדות", "מלש״בים"]
+  }),
+  new ProjectItem({
+    id: "pesach",
+    name: "מכירת חמץ",
+    tagline: "מכירת חמץ דרך הרבנות",
+    description:
+      "טופס דיגיטלי למכירת חמץ באמצעות הרבנות הצבאית, פתוח לחיילים לקראת פסח.",
+    category: "web",
+    image: "/projects/pesach.webp",
+    year: "2026",
+    tileSize: "std",
+    tags: ["פסח", "טפסים", "הלכה"]
+  }),
+  new ProjectItem({
+    id: "two-halachot",
+    name: "שתי הלכות",
+    tagline: "שתי הלכות ביום מתורת המחנה",
+    description:
+      "שתי הלכות יומיות מתוך ספר תורת המחנה של צה״ל, מסודרות לפי לוח השנה העברי.",
+    category: "web",
+    image: "/projects/two-halachot.webp",
+    year: "2025",
+    tileSize: "std",
+    tags: ["הלכה", "לימוד יומי", "תורת המחנה"]
+  }),
+  new ProjectItem({
+    id: "zmanim",
+    name: "זמני היום",
+    tagline: "לוח זמנים הלכתיים",
+    description:
+      "זמני היום המדויקים לכל מקום בעולם, לפי תאריך לועזי או עברי.",
+    category: "web",
+    image: "/projects/zmanim.webp",
+    year: "2025",
+    tileSize: "std",
+    tags: ["זמנים", "לוח עברי", "הלכה"]
+  }),
+  new ProjectItem({
+    id: "hoger",
+    name: "חוגר דיגיטלי",
+    tagline: "תעודת חוגר בטלפון",
+    description:
+      "תעודת חוגר דיגיטלית לזיהוי חיילים ולבקרת כניסה בשערים, עם דשבורד בקרה בזמן אמת.",
+    category: "mobile",
+    image: "/projects/hoger.webp",
+    year: "2026",
+    tileSize: "tall",
+    tags: ["זהות דיגיטלית", "שערים", "אפליקציה"]
+  }),
+  new ProjectItem({
+    id: "orfi",
+    name: "תאג״דים וחמ״ל",
+    tagline: "תמונת מצב בזמן אמת",
+    description:
+      "אפליקציות שטח, מסכי שטח ודאשבורד חמ״ל שמתחברים לתמונה מבצעית אחת שמתעדכנת בזמן אמת.",
+    category: "platform",
+    image: "/projects/orfi.webp",
+    year: "2026",
+    tileSize: "wide",
+    tags: ["חמ״ל", "שטח", "דאשבורד"]
+  }),
+  new ProjectItem({
+    id: "molecule",
+    name: "מולקולה בוט",
+    tagline: "עוזר AI למנהלי ידע",
+    description:
+      "עוזר חכם למיישמי מולקולה ולמנהלי ידע ב-SharePoint.",
+    category: "ai",
+    image: "/projects/molecule.webp",
+    year: "2026",
+    tileSize: "std",
+    tags: ["AI", "SharePoint", "ידע"]
+  }),
+  new ProjectItem({
+    id: "agam",
+    name: "איתור קציני דת",
+    tagline: "מדור אומ״ץ",
+    description:
+      "מערכת לאיתור וניהול המועמדים לקורס קציני דת.",
+    category: "platform",
+    image: "/projects/agam.webp",
+    year: "2026",
+    tileSize: "std",
+    tags: ["גיוס", "מועמדים", "קציני דת"]
+  }),
+  new ProjectItem({
+    id: "amir",
+    name: "אמי״ר 2.0",
+    tagline: "ניהול מלאי ציוד רבנותי",
+    description:
+      "מערכת לניהול ומעקב אחר מלאי הציוד הרבנותי בכל מתקן צבאי.",
+    category: "platform",
+    image: "/projects/amir.webp",
+    year: "2026",
+    tileSize: "std",
+    tags: ["מלאי", "ציוד", "מתקנים"]
+  }),
+  new ProjectItem({
+    id: "shchakim",
+    name: "שחקים",
+    tagline: "אפליקציית המתפללים",
+    description:
+      "שחקים קונקט מחברת את המתפללים לבית הכנסת, לצד ממשק הרב לניהול הלוחות.",
+    category: "mobile",
+    image: "/projects/shchakim.webp",
+    year: "2025",
+    tileSize: "tall",
+    tags: ["בית כנסת", "לוחות", "אפליקציה"]
+  }),
+  new ProjectItem({
+    id: "maal",
+    name: "מא״ל",
+    tagline: "המרכז לאימונים לוגיסטיים",
+    description:
+      "תיאום אימונים, לומדות מקצועיות ומבחנים — במערכת אחת למרכז לאימונים לוגיסטיים.",
+    category: "platform",
+    image: "/projects/maal.webp",
+    year: "2026",
+    tileSize: "wide",
+    tags: ["אימונים", "לוגיסטיקה", "לומדות"]
+  }),
+  new ProjectItem({
+    id: "shahar",
+    name: "שח״ר",
+    tagline: "שליטה חכמה ברכוש תקשובי",
+    description:
+      "ניהול, מעקב ובקרה על ציוד תקשובי — סורקת, רושמת ושולטת.",
+    category: "platform",
+    image: "/projects/shahar.webp",
+    year: "2026",
+    tileSize: "std",
+    tags: ["תקשוב", "ציוד", "מעקב"]
+  }),
+  new ProjectItem({
+    id: "pikod",
+    name: "פיקוד מנצח",
+    tagline: "תכנים פיקודיים לחיל הרבנות",
+    description:
+      "סרטונים ופודקאסטים לפיתוח מיומנויות פיקודיות וניהוליות בחיל הרבנות.",
+    category: "web",
+    image: "/projects/pikod.webp",
+    year: "2025",
+    tileSize: "std",
+    tags: ["פיקוד", "וידאו", "פודקאסט"]
+  }),
+  new ProjectItem({
+    id: "etur",
+    name: "ניהול משימות",
+    tagline: "משימות ליחידה הארגונית",
+    description:
+      "מערכת ידידותית לניהול ומעקב אחר משימות היחידה.",
+    category: "platform",
+    image: "/projects/etur.webp",
+    year: "2026",
+    tileSize: "std",
+    tags: ["משימות", "ניהול", "צוות"]
   })
 ]);

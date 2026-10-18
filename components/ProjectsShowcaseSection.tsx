@@ -9,6 +9,10 @@ import { projectsCatalog } from "@/lib/projects/ProjectsCatalog";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const PIN_SCREENS = 10;
+const CARD_SCROLL_DURATION = 3.6;
+const CARD_SCROLL_BASE_SCREENS = 3;
+
 class ProjectsScrollAnimator {
   private triggers: ScrollTrigger[] = [];
 
@@ -88,6 +92,11 @@ class ProjectsScrollAnimator {
     const projDistance = () => Math.max(0, scroller.scrollHeight - stack.clientHeight);
     const orgDistance = () => Math.max(0, orgScroller.scrollHeight - orgFrame.clientHeight);
 
+    // The card scroll was tuned for ~3 screens of cards. With more projects, stretch that
+    // segment (and the pin length below) so the cards keep the same pace instead of racing.
+    const cardScrollDuration =
+      CARD_SCROLL_DURATION * Math.max(1, projDistance() / (window.innerHeight * CARD_SCROLL_BASE_SCREENS));
+
     const master = gsap.timeline();
 
     master.to(rows, { autoAlpha: 1, y: 0, stagger: 0.1, ease: "power2.out", duration: 0.7 }, 0);
@@ -122,7 +131,7 @@ class ProjectsScrollAnimator {
     master.fromTo(
       scroller,
       { y: 0 },
-      { y: () => -projDistance(), ease: "none", duration: 3.6 },
+      { y: () => -projDistance(), ease: "none", duration: cardScrollDuration },
       ">"
     );
     master.to({}, { duration: 0.6 });
@@ -139,11 +148,14 @@ class ProjectsScrollAnimator {
       ">"
     );
 
+    const baseDuration = master.duration() - cardScrollDuration + CARD_SCROLL_DURATION;
+    const pinScreens = (PIN_SCREENS * master.duration()) / baseDuration;
+
     this.triggers.push(
       ScrollTrigger.create({
         trigger: stage,
         start: "top top",
-        end: () => `+=${window.innerHeight * 10}`,
+        end: () => `+=${window.innerHeight * pinScreens}`,
         pin: stage,
         pinSpacing: true,
         anticipatePin: 1,

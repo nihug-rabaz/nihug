@@ -8,7 +8,7 @@ import type { Scope } from "animejs";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const LOGO_SRC = "/hero-frames/logo2 (1).png";
+const LOGO_SRC = "/hero-frames/logo2.webp";
 
 const FLOAT_WORDS = ["כך", "אנחנו", "בונים", "פרויקטים", "מושלמים", "לעומק"];
 

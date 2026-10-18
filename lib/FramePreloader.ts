@@ -37,7 +37,7 @@ export class FramePreloader {
 
   private buildPriorityOrder() {
     const order: number[] = [];
-    const tailStart = Math.max(1, this.frameCount - 80);
+    const tailStart = Math.max(1, this.frameCount - 40);
 
     for (let frame = tailStart; frame <= this.frameCount; frame += 1) {
       order.push(frame);
