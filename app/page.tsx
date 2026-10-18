@@ -14,8 +14,8 @@ export default function Home() {
       <HeroScrollVideo />
       <ScrollCapabilitiesSection />
       <ProjectsShowcaseSection />
-      <BranchesShowcaseSection />
       <AboutSection />
+      <BranchesShowcaseSection />
       {ENDING === "roots" ? <RootsDescentSection /> : <OceanFooterSection />}
     </main>
   );
