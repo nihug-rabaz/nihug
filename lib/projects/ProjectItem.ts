@@ -9,6 +9,7 @@ export class ProjectItem {
   readonly category: ProjectCategory;
   readonly image: string;
   readonly logo?: string;
+  readonly url?: string;
   readonly year: string;
   readonly featured: boolean;
   readonly tags: readonly string[];
@@ -22,6 +23,7 @@ export class ProjectItem {
     category: ProjectCategory;
     image: string;
     logo?: string;
+    url?: string;
     year: string;
     featured?: boolean;
     tags: string[];
@@ -34,6 +36,7 @@ export class ProjectItem {
     this.category = config.category;
     this.image = config.image;
     this.logo = config.logo;
+    this.url = config.url;
     this.year = config.year;
     this.featured = config.featured ?? false;
     this.tags = config.tags;

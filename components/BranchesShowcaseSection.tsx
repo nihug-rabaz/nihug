@@ -70,6 +70,8 @@ class BranchesShowcaseController {
       if (el) el.textContent = text;
     };
     set("[data-name]", branch.name);
+    set("[data-fullname]", branch.fullName ?? "ענף");
+    set("[data-role]", branch.role ?? "");
     set("[data-count]", String(branch.projectCount));
     set("[data-count-label]", branch.projectLabel);
     card.dataset.cardCount = String(branch.projectCount);
@@ -192,7 +194,7 @@ export default function BranchesShowcaseSection() {
           הענפים שאיתם אנחנו עובדים
         </h2>
         <p className="branches-showcase__lead" data-reveal>
-          {branchesCatalog.getCount()} ענפים מתחלפים על הכרטיסים — רחפו על כרטיס כדי לפתוח אותו ולראות את כל הפרויקטים שבנינו לאותו ענף.
+          {branchesCatalog.getTotalProjects()} מערכות שבנינו ל־{branchesCatalog.getCount()} ענפים ומדורים ברבנות הצבאית. רחפו על כרטיס כדי לראות מה בנינו לכל אחד מהם.
         </p>
       </header>
 
@@ -208,9 +210,14 @@ export default function BranchesShowcaseSection() {
               <span className="branch-card__name" data-name>
                 {branch.name}
               </span>
-              <span className="branch-card__tag">ענף</span>
+              <span className="branch-card__tag" data-fullname>
+                {branch.fullName ?? "ענף"}
+              </span>
 
               <div className="branch-card__detail" aria-hidden="true">
+                <p className="branch-card__role" data-role>
+                  {branch.role ?? ""}
+                </p>
                 <span className="branch-card__count" data-count>
                   {branch.projectCount}
                 </span>

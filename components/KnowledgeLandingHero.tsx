@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useState } from "react";
 import type { MouseEvent, Ref } from "react";
 import { MusicPlayer } from "@/components/ui/music-player";
-import { TextAnimate } from "@/components/ui/text-animate";
 import { scrollToSection } from "@/lib/smoothScroll";
 
 const projects = [
@@ -52,15 +51,15 @@ function KnowledgeHeroNav({
   return (
     <header ref={navRef} className="knowledge-hero-nav">
       <nav className="knowledge-hero-tabs" aria-label="ניווט ראשי">
-        <a href="#home" onClick={goTo("#home")}><TextAnimate animation="blurInUp" by="word">בית</TextAnimate></a>
-        <a href="#work" onClick={goTo("#work")}><TextAnimate animation="blurInUp" by="word">פרויקטים</TextAnimate></a>
-        <a href="#branches" onClick={goTo("#branches")}><TextAnimate animation="blurInUp" by="word">ענפים</TextAnimate></a>
-        <a href="#structure" onClick={goTo("#structure")}><TextAnimate animation="blurInUp" by="word">מבנה</TextAnimate></a>
+        <a href="#home" onClick={goTo("#home")}>בית</a>
+        <a href="#work" onClick={goTo("#work")}>פרויקטים</a>
+        <a href="#branches" onClick={goTo("#branches")}>ענפים</a>
+        <a href="#structure" onClick={goTo("#structure")}>מבנה</a>
       </nav>
 
       <button className="knowledge-hero-brand" type="button" aria-label="פתח נגן מוזיקה" onClick={onLogoClick}>
         <Image src="/logo-hover-player.png" alt="" width={52} height={52} priority />
-        <span><TextAnimate animation="blurInUp" by="word">רבנות צבאית</TextAnimate></span>
+        <span>רבנות צבאית</span>
       </button>
     </header>
   );
@@ -86,9 +85,7 @@ function KnowledgeHeroCopy() {
         <span>ויכולתה ברבנות הצבאית</span>
       </h1>
       <p>
-        <TextAnimate animation="blurInUp" by="word">
-          תיק הפרויקטים שלנו
-        </TextAnimate>
+        תיק הפרויקטים שלנו
       </p>
     </div>
   );
@@ -103,7 +100,7 @@ function ProjectLogoMarquee() {
             <div className="project-logo-mark">
               <Image src={project.logo} alt="" width={96} height={96} unoptimized />
             </div>
-            <span><TextAnimate animation="blurInUp" by="word">{project.name}</TextAnimate></span>
+            <span>{project.name}</span>
           </article>
         ))}
       </div>

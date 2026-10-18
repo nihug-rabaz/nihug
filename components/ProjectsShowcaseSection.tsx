@@ -6,6 +6,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ProjectShowcaseCard } from "@/components/projects/ProjectShowcaseCard";
 import TeamShowcase from "@/components/TeamShowcase";
 import { projectsCatalog } from "@/lib/projects/ProjectsCatalog";
+import { branchesCatalog } from "@/lib/branches/BranchesCatalog";
+import { TEAM_ROSTER } from "@/lib/team/TeamRoster";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -175,7 +177,6 @@ class ProjectsScrollAnimator {
 export default function ProjectsShowcaseSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const animatorRef = useRef<ProjectsScrollAnimator | null>(null);
-  const spotlightRef = useRef<HTMLDivElement | null>(null);
 
   const allProjects = projectsCatalog.getAll();
   const totalCount = projectsCatalog.getCount();
@@ -189,23 +190,6 @@ export default function ProjectsShowcaseSection() {
     animatorRef.current = animator;
     animator.mount(section, reduceMotion);
 
-    const spotlight = spotlightRef.current;
-    const onMove = (event: PointerEvent) => {
-      if (!spotlight || reduceMotion) return;
-      const rect = section.getBoundingClientRect();
-      spotlight.style.setProperty("--spot-x", `${event.clientX - rect.left}px`);
-      spotlight.style.setProperty("--spot-y", `${event.clientY - rect.top}px`);
-      spotlight.style.opacity = "1";
-    };
-
-    const onLeave = () => {
-      if (!spotlight) return;
-      spotlight.style.opacity = "0";
-    };
-
-    section.addEventListener("pointermove", onMove);
-    section.addEventListener("pointerleave", onLeave);
-
     const refresh = () => ScrollTrigger.refresh(true);
     const refreshIds = [0, 400, 1200].map((delay) => window.setTimeout(refresh, delay));
 
@@ -217,8 +201,6 @@ export default function ProjectsShowcaseSection() {
       refreshIds.forEach((id) => window.clearTimeout(id));
       window.removeEventListener("load", refresh);
       resizeObserver.disconnect();
-      section.removeEventListener("pointermove", onMove);
-      section.removeEventListener("pointerleave", onLeave);
       animator.destroy();
       animatorRef.current = null;
     };
@@ -232,8 +214,6 @@ export default function ProjectsShowcaseSection() {
       dir="rtl"
       aria-label="תיק הפרויקטים שלנו"
     >
-      <div ref={spotlightRef} className="projects-showcase__spotlight" aria-hidden="true" />
-
       <div className="projects-showcase__stage" data-stage>
         <div className="projects-showcase__pinblock" data-pinblock>
           <div className="projects-showcase__inner">
@@ -253,9 +233,9 @@ export default function ProjectsShowcaseSection() {
 
           <div className="projects-stats" data-stats-root>
             {[
-              { id: "count", target: totalCount, label: "פרויקטים פעילים" },
-              { id: "domains", target: 4, label: "תחומי פעילות" },
-              { id: "units", target: 12, label: "יחידות מחוברות" }
+              { id: "count", target: totalCount, label: "פרויקטים באתר" },
+              { id: "branches", target: branchesCatalog.getCount(), label: "ענפים ומדורים" },
+              { id: "team", target: TEAM_ROSTER.length, label: "אנשי צוות" }
             ].map((stat) => (
               <div
                 key={stat.id}
