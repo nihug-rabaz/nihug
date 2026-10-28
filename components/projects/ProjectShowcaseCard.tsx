@@ -29,6 +29,8 @@ export function ProjectShowcaseCard({ project, index }: ProjectShowcaseCardProps
             fill
             sizes={isLarge ? "(max-width: 768px) 100vw, 66vw" : "(max-width: 768px) 100vw, 33vw"}
             className="project-card__image"
+            loading={index < 4 ? "eager" : "lazy"}
+            priority={index < 2}
           />
         )}
         <div className="project-card__scrim" aria-hidden="true" />

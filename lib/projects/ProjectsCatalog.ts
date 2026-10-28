@@ -29,7 +29,7 @@ export const projectsCatalog = new ProjectsCatalog([
       "ממשק שיחה חכם, חיפוש ידע מהיר ומענה אישי לחיילים ולמפקדים בכל זמן.",
     category: "ai",
     image: "/projects/5.webp",
-    url: "https://www.ravbot.co.il",
+    url: "https://ravbot.co.il",
     logo: "/images/ravbot-logo.png",
     year: "2025",
     featured: true,
@@ -57,7 +57,7 @@ export const projectsCatalog = new ProjectsCatalog([
       "מערכת לניהול לימוד יומי, תכנים תורניים וסיומי מסכת לחיילי הרבנות הצבאית.",
     category: "web",
     image: "/projects/6h.webp",
-    url: "https://adran-haleh.vercel.app",
+    url: "https://adran-haleh.rabaz.co.il",
     logo: "/project-logos/hadran.png",
     year: "2025",
     tileSize: "tall",
@@ -77,6 +77,19 @@ export const projectsCatalog = new ProjectsCatalog([
     tags: ["טפסים", "אבטחה", "תהליך"]
   }),
   new ProjectItem({
+    id: "apps-hub",
+    name: "מערכות חללים אזרחי",
+    tagline: "קישורי חירום — אומץ, תרחית, TADAM והבורר",
+    description:
+      "שער מרוכז להתקנה ולגישה למערכות החירום: אומץ, תרחית, דאשבורדים, TADAM והבורר — במקום אחד.",
+    category: "platform",
+    image: "/projects/tarahit.webp",
+    url: "https://apps.rabaz.co.il",
+    year: "2026",
+    tileSize: "wide",
+    tags: ["חירום", "חללים", "קישורים"]
+  }),
+  new ProjectItem({
     id: "ometz",
     name: "אומץ",
     tagline: "מערכת איסוף ותיעוד ממצאים",
@@ -84,7 +97,7 @@ export const projectsCatalog = new ProjectsCatalog([
       "תיעוד מובנה של ממצאים מהשטח, ניהול תיקים והפקת דוחות בזמן אמת.",
     category: "platform",
     image: "/projects/7h.webp",
-    url: "https://omez.vercel.app",
+    url: "https://ometz.rabaz.co.il",
     year: "2024",
     tileSize: "tall",
     tags: ["תיעוד", "ממצאים", "דוחות"]
@@ -110,6 +123,7 @@ export const projectsCatalog = new ProjectsCatalog([
       "תיאום סיורים, ניהול קבוצות, אישורים ולוחות זמנים — מכל קצוות הארגון במקום אחד.",
     category: "web",
     image: "/projects/2.webp",
+    url: "https://events.rabaz.co.il",
     logo: "/project-logos/hazuti.png",
     year: "2024",
     tileSize: "std",
@@ -149,7 +163,7 @@ export const projectsCatalog = new ProjectsCatalog([
       "ניהול ממצאים וקליטות, שרשרת זיהוי ובקרה, תמונת מצב ודוחות — וממשיכה לעבוד גם ללא רשת.",
     category: "platform",
     image: "/projects/tarahit.webp",
-    url: "https://tarahit.vercel.app",
+    url: "https://tarahit.rabaz.co.il",
     year: "2026",
     tileSize: "std",
     tags: ["חללים", "זיהוי", "לוגיסטיקה"]
@@ -188,7 +202,7 @@ export const projectsCatalog = new ProjectsCatalog([
       "שער הכניסה למלש״בים: הגשת מועמדות ללהקת הרבנות הצבאית, מעקב סטטוס, תמונות וקליפים.",
     category: "web",
     image: "/projects/lahaka.webp",
-    url: "https://kolkore.vercel.app",
+    url: "https://band.rabaz.co.il",
     year: "2026",
     tileSize: "wide",
     tags: ["מוזיקה", "מועמדות", "מלש״בים"]
@@ -361,5 +375,77 @@ export const projectsCatalog = new ProjectsCatalog([
     year: "2026",
     tileSize: "std",
     tags: ["משימות", "ניהול", "צוות"]
+  }),
+  new ProjectItem({
+    id: "gluya",
+    name: "גלויה דיגיטלית",
+    tagline: "שליחת ברכות וגלויות",
+    description: "יצירה ושליחה של גלויות דיגיטליות ממותגות לחיילים ולמשפחות.",
+    category: "web",
+    image: "/projects/8h.webp",
+    url: "https://letter.rabaz.co.il",
+    year: "2025",
+    tileSize: "std",
+    tags: ["גלויות", "ברכות", "דיגיטל"]
+  }),
+  new ProjectItem({
+    id: "no-words",
+    name: "ללא מילים",
+    tagline: "תוכן ויזואלי ללא מילים",
+    description: "חוויה דיגיטלית שמעבירה מסרים בכוח התמונה והצליל — ללא טקסט מלווה.",
+    category: "web",
+    image: "/projects/1.webp",
+    url: "https://no-words.rabaz.co.il",
+    year: "2025",
+    tileSize: "wide",
+    tags: ["תוכן", "וידאו", "חוויה"]
+  }),
+  new ProjectItem({
+    id: "event-manager",
+    name: "ניהול אירועים",
+    tagline: "תכנון ותיאום אירועים",
+    description: "מערכת לניהול אירועי הרבנות — לוחות זמנים, משתתפים, משאבים ודוחות.",
+    category: "platform",
+    image: "/projects/4.webp",
+    url: "https://event-manager.rabaz.co.il",
+    year: "2025",
+    tileSize: "std",
+    tags: ["אירועים", "תיאום", "ניהול"]
+  }),
+  new ProjectItem({
+    id: "miluim-info",
+    name: "מידע מילואים",
+    tagline: "מידע ושירותים למילואימניקים",
+    description: "פורטל מרוכז למידע, זכויות ושירותי הרבנות לחיילי מילואים.",
+    category: "web",
+    image: "/projects/5.webp",
+    url: "https://miluiminfo.rabaz.co.il",
+    year: "2025",
+    tileSize: "tall",
+    tags: ["מילואים", "מידע", "שירות"]
+  }),
+  new ProjectItem({
+    id: "lomda-agam",
+    name: "לומדה",
+    tagline: "למידה מקוונת באג״ם",
+    description: "לומדות אינטראקטיביות והכשרות דיגיטליות לקציני דת ולמועמדים.",
+    category: "web",
+    image: "/projects/6h.webp",
+    url: "https://lomda-agam.rabaz.co.il",
+    year: "2025",
+    tileSize: "std",
+    tags: ["למידה", "לומדה", "הכשרה"]
+  }),
+  new ProjectItem({
+    id: "ravzar",
+    name: "רבנות בשטח",
+    tagline: "ניהול פעילות רבנות בשטח",
+    description: "מערכת לתמיכה בפעילות הרבנים בשטח — תיעוד, משימות ותמונת מצב.",
+    category: "platform",
+    image: "/projects/7h.webp",
+    url: "https://www.rabaz-idf.com/ravzar-main",
+    year: "2025",
+    tileSize: "wide",
+    tags: ["שטח", "רבנים", "מבצעי"]
   })
 ]);

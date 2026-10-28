@@ -4,13 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { KnowledgeHeroOverlay } from "@/components/KnowledgeLandingHero";
 import { HeroParallaxFrame } from "@/components/HeroParallaxFrame";
 import { HeroVideoDialog } from "@/components/magicui/hero-video-dialog";
-import { FramePreloader } from "@/lib/FramePreloader";
-import {
-  dispatchHeroFrameChange,
-  frameIndexFromProgress,
-  framePath,
-  FRAME_COUNT
-} from "@/lib/heroFrames";
+import { framePath } from "@/lib/heroFrames";
 import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -18,21 +12,20 @@ import { registerLenis } from "@/lib/smoothScroll";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const SCROLL_PX_PER_FRAME = 32;
-const OLD_FRAME_COUNT = 302;
+/** Scroll distance for the hero pin — tuned for feel, not frame count. */
+const HERO_SCROLL_PX = 4200;
 const HERO_VIDEO_HOLD_PX = 900;
-const FRAME_SCROLL_PX = FRAME_COUNT * SCROLL_PX_PER_FRAME;
-const TOTAL_SCROLL_PX = FRAME_SCROLL_PX + HERO_VIDEO_HOLD_PX;
-const scaleFrame = (frame: number) => (frame / OLD_FRAME_COUNT) * FRAME_COUNT;
-const HOLD_ANCHOR_PROGRESS = scaleFrame(272) / FRAME_COUNT;
-const HOLD_NEW_START = HOLD_ANCHOR_PROGRESS * (FRAME_SCROLL_PX / TOTAL_SCROLL_PX);
-const HOLD_NEW_END = HOLD_NEW_START + HERO_VIDEO_HOLD_PX / TOTAL_SCROLL_PX;
-const PROGRESS_SCALE = TOTAL_SCROLL_PX / FRAME_SCROLL_PX;
+const TOTAL_SCROLL_PX = HERO_SCROLL_PX + HERO_VIDEO_HOLD_PX;
+const HOLD_START = HERO_SCROLL_PX / TOTAL_SCROLL_PX;
+const HOLD_END = 1;
+const HERO_VIDEO_SCRUB = "/videos/hero-scrub.mp4";
+const HERO_VIDEO_FALLBACK = "/videos/hero.mp4";
+const HERO_POSTER = framePath(1);
+const VIDEO_SEEK_MIN_DELTA = 1 / 30;
 
-const remapHoldProgress = (newProgress: number): number => {
-  if (newProgress <= HOLD_NEW_START) return newProgress * PROGRESS_SCALE;
-  if (newProgress <= HOLD_NEW_END) return HOLD_ANCHOR_PROGRESS;
-  return HOLD_ANCHOR_PROGRESS + (newProgress - HOLD_NEW_END) * PROGRESS_SCALE;
+const remapHoldProgress = (progress: number): number => {
+  if (progress <= HOLD_START) return progress / HOLD_START;
+  return 1;
 };
 
 export default function HeroScrollVideo() {
@@ -43,14 +36,31 @@ export default function HeroScrollVideo() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const pinRef = useRef<HTMLDivElement | null>(null);
   const frameShellRef = useRef<HTMLDivElement | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const navRef = useRef<HTMLElement | null>(null);
   const copyRef = useRef<HTMLDivElement | null>(null);
   const botStageRef = useRef<HTMLDivElement | null>(null);
-  const frameImagesRef = useRef<HTMLImageElement[]>([]);
-  const currentFrameRef = useRef(0);
   const loadingProgressRef = useRef(0);
   const lenisRef = useRef<Lenis | null>(null);
+  const seekTokenRef = useRef(0);
+  const pendingVideoProgressRef = useRef<number | null>(null);
+  const videoSyncRafRef = useRef(0);
+  const [heroVideoSrc, setHeroVideoSrc] = useState(HERO_VIDEO_SCRUB);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(HERO_VIDEO_SCRUB, { method: "HEAD" })
+      .then((res) => {
+        if (cancelled) return;
+        if (!res.ok) setHeroVideoSrc(HERO_VIDEO_FALLBACK);
+      })
+      .catch(() => {
+        if (!cancelled) setHeroVideoSrc(HERO_VIDEO_FALLBACK);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     loadingProgressRef.current = loadingProgress;
@@ -62,12 +72,11 @@ export default function HeroScrollVideo() {
       setDisplayedProgress((current) => {
         const target = loadingProgressRef.current;
         if (current >= target) return current;
-        const step = Math.max(1, Math.ceil((target - current) * 0.14));
+        const step = Math.max(1, Math.ceil((target - current) * 0.18));
         return Math.min(current + step, target);
       });
       rafId = requestAnimationFrame(animateCount);
     };
-
     rafId = requestAnimationFrame(animateCount);
     return () => cancelAnimationFrame(rafId);
   }, []);
@@ -76,109 +85,77 @@ export default function HeroScrollVideo() {
     let isMounted = true;
     const abort = new AbortController();
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+    const noHover = window.matchMedia("(hover: none)").matches;
+    const skipLenis = reduceMotion || coarsePointer || noHover;
     const previousOverflow = document.body.style.overflow;
     history.scrollRestoration = "manual";
     window.scrollTo(0, 0);
 
-    const lenis = new Lenis({
-      lerp: 0.08,
-      smoothWheel: true,
-      wheelMultiplier: 0.85
-    });
-    lenis.stop();
-    lenisRef.current = lenis;
-    registerLenis(lenis);
+    let lenis: Lenis | null = null;
+    let lenisTicker: ((time: number) => void) | null = null;
 
-    lenis.on("scroll", ScrollTrigger.update);
+    if (!skipLenis) {
+      lenis = new Lenis({
+        lerp: 0.08,
+        smoothWheel: true,
+        wheelMultiplier: 0.85
+      });
+      lenis.stop();
+      lenisRef.current = lenis;
+      registerLenis(lenis);
+      lenis.on("scroll", ScrollTrigger.update);
 
-    const lenisTicker = (time: number) => {
-      lenis.raf(time * 1000);
-    };
-
-    gsap.ticker.add(lenisTicker);
-    gsap.ticker.lagSmoothing(0);
-
-    const canvas = canvasRef.current;
-    const context = canvas?.getContext("2d");
+      lenisTicker = (time: number) => {
+        lenis!.raf(time * 1000);
+      };
+      gsap.ticker.add(lenisTicker);
+      gsap.ticker.lagSmoothing(0);
+    } else {
+      lenisRef.current = null;
+      registerLenis(null);
+    }
 
     let resizeObserver: ResizeObserver | undefined;
     let scrollTrigger: ScrollTrigger | undefined;
     let timeline: gsap.core.Timeline | undefined;
 
-    const ensureImage = (frameIndex: number) => {
-      const existing = frameImagesRef.current[frameIndex];
-      if (existing?.naturalWidth) return existing;
-
-      const frameNumber = frameIndex + 1;
-      const image = new Image();
-      image.decoding = "async";
-      image.src = framePath(frameNumber);
-      frameImagesRef.current[frameIndex] = image;
-      return image;
+    const pushProgress = (percent: number) => {
+      const next = Math.min(100, Math.max(loadingProgressRef.current, percent));
+      loadingProgressRef.current = next;
+      if (isMounted) setLoadingProgress(next);
     };
 
-    const renderFrame = (frameIndex: number) => {
-      if (!canvas || !context) return;
+    const flushVideoSync = () => {
+      videoSyncRafRef.current = 0;
+      const progress = pendingVideoProgressRef.current;
+      if (progress === null) return;
+      pendingVideoProgressRef.current = null;
 
-      const image = ensureImage(frameIndex);
-      if (!image) return;
+      const video = videoRef.current;
+      if (!video || !Number.isFinite(video.duration) || video.duration <= 0) return;
 
-      if (!image.complete || image.naturalWidth === 0) {
-        image.onload = () => {
-          if (currentFrameRef.current === frameIndex) renderFrame(frameIndex);
-        };
-        return;
+      const target = Math.min(video.duration - 0.05, Math.max(0, progress * video.duration));
+      if (Math.abs(video.currentTime - target) < VIDEO_SEEK_MIN_DELTA) return;
+
+      const token = ++seekTokenRef.current;
+      try {
+        video.currentTime = target;
+      } catch {
+        /* ignore seek races while metadata settles */
       }
 
-      const ratio = window.devicePixelRatio || 1;
-      const rect = canvas.getBoundingClientRect();
-      const targetWidth = Math.max(1, Math.floor(rect.width * ratio));
-      const targetHeight = Math.max(1, Math.floor(rect.height * ratio));
-
-      if (canvas.width !== targetWidth || canvas.height !== targetHeight) {
-        canvas.width = targetWidth;
-        canvas.height = targetHeight;
-      }
-
-      context.imageSmoothingEnabled = true;
-      context.imageSmoothingQuality = "high";
-      context.clearRect(0, 0, canvas.width, canvas.height);
-
-      const imageRatio = image.naturalWidth / image.naturalHeight;
-      const canvasRatio = canvas.width / canvas.height;
-      let drawWidth = canvas.width;
-      let drawHeight = canvas.height;
-      let offsetX = 0;
-      let offsetY = 0;
-
-      if (imageRatio > canvasRatio) {
-        drawHeight = canvas.height;
-        drawWidth = drawHeight * imageRatio;
-        offsetX = (canvas.width - drawWidth) / 2;
-      } else {
-        drawWidth = canvas.width;
-        drawHeight = drawWidth / imageRatio;
-        offsetY = canvas.height - drawHeight;
-      }
-
-      context.drawImage(image, offsetX, offsetY, drawWidth, drawHeight);
+      const onSeeked = () => {
+        if (token !== seekTokenRef.current) return;
+        video.removeEventListener("seeked", onSeeked);
+      };
+      video.addEventListener("seeked", onSeeked);
     };
 
-    const syncFrame = (progress: number) => {
-      const clampedProgress = gsap.utils.clamp(0, 1, progress);
-      const frameIndex = frameIndexFromProgress(clampedProgress);
-      const frameNumber = frameIndex + 1;
-
-      dispatchHeroFrameChange({
-        frameIndex,
-        frameNumber,
-        progress: clampedProgress,
-        frameSrc: framePath(frameNumber)
-      });
-
-      if (frameIndex !== currentFrameRef.current) {
-        currentFrameRef.current = frameIndex;
-        renderFrame(frameIndex);
+    const syncVideoTime = (progress: number) => {
+      pendingVideoProgressRef.current = progress;
+      if (!videoSyncRafRef.current) {
+        videoSyncRafRef.current = requestAnimationFrame(flushVideoSync);
       }
     };
 
@@ -198,29 +175,13 @@ export default function HeroScrollVideo() {
     };
 
     const applyProgress = (progress: number) => {
-      const clampedProgress = gsap.utils.clamp(0, 1, remapHoldProgress(progress));
-      const stageFadeInStart = scaleFrame(172);
-      const stageFadeInEnd = scaleFrame(188);
-      const revealStartFrame = scaleFrame(182);
-      const revealEndFrame = scaleFrame(272);
-      const stageVisibility = gsap.utils.clamp(0, 1, (clampedProgress - stageFadeInStart / FRAME_COUNT) / ((stageFadeInEnd - stageFadeInStart) / FRAME_COUNT));
-      const revealProgress = gsap.utils.clamp(0, 1, (clampedProgress - revealStartFrame / FRAME_COUNT) / ((revealEndFrame - revealStartFrame) / FRAME_COUNT));
+      const contentProgress = gsap.utils.clamp(0, 1, remapHoldProgress(progress));
+      const stageVisibility = gsap.utils.clamp(0, 1, (contentProgress - 0.55) / 0.12);
+      const revealProgress = gsap.utils.clamp(0, 1, (contentProgress - 0.62) / 0.28);
       syncBotVideo(revealProgress, stageVisibility);
-      timeline?.progress(clampedProgress);
-      syncFrame(clampedProgress);
+      timeline?.progress(contentProgress);
+      syncVideoTime(contentProgress);
     };
-
-    const pushProgress = (percent: number) => {
-      const next = Math.min(100, Math.max(loadingProgressRef.current, percent));
-      loadingProgressRef.current = next;
-      if (isMounted) setLoadingProgress(next);
-    };
-
-    const simulatedProgressId = window.setInterval(() => {
-      if (!isMounted || abort.signal.aborted) return;
-      const simulated = Math.min(96, loadingProgressRef.current + 1);
-      pushProgress(simulated);
-    }, 45);
 
     const finishLoading = () => {
       pushProgress(100);
@@ -231,30 +192,60 @@ export default function HeroScrollVideo() {
         document.body.style.overflow = previousOverflow;
         ScrollTrigger.refresh(true);
         applyProgress(scrollTrigger?.progress ?? 0);
-      }, 600);
+      }, 120);
     };
 
-    const preloadFrames = async () => {
-      pushProgress(1);
+    const waitForVideoReady = () =>
+      new Promise<void>((resolve) => {
+        const video = videoRef.current;
+        if (!video) {
+          resolve();
+          return;
+        }
 
-      const preloader = new FramePreloader(FRAME_COUNT, framePath, pushProgress);
-      frameImagesRef.current = await preloader.load(abort.signal);
+        const done = () => {
+          video.removeEventListener("loadedmetadata", onReady);
+          resolve();
+        };
 
-      if (!isMounted || abort.signal.aborted) return;
+        const onReady = () => {
+          pushProgress(92);
+          done();
+        };
 
-      renderFrame(0);
+        if (video.readyState >= 1) {
+          pushProgress(90);
+          done();
+          return;
+        }
 
-      await Promise.race([
-        document.fonts.ready,
-        new Promise<void>((resolve) => window.setTimeout(resolve, 1500))
-      ]);
+        video.addEventListener("loadedmetadata", onReady, { once: true });
 
-      window.scrollTo(0, 0);
-      lenis.scrollTo(0, { immediate: true, force: true });
-    };
+        // Don't block the portal forever if the network is slow — enter with poster.
+        window.setTimeout(() => {
+          if (abort.signal.aborted) return;
+          pushProgress(85);
+          done();
+        }, 1200);
+
+        try {
+          video.load();
+        } catch {
+          done();
+        }
+      });
 
     const setupScroll = () => {
-      if (!sectionRef.current || !pinRef.current || !frameShellRef.current || !copyRef.current || !navRef.current || !botStageRef.current) return;
+      if (
+        !sectionRef.current ||
+        !pinRef.current ||
+        !frameShellRef.current ||
+        !copyRef.current ||
+        !navRef.current ||
+        !botStageRef.current
+      ) {
+        return;
+      }
 
       scrollTrigger?.kill();
       timeline?.kill();
@@ -284,15 +275,15 @@ export default function HeroScrollVideo() {
         transformOrigin: "50% 50%"
       });
 
-      const heroFadeEnd = Math.max(0.05, 1 - 40 / FRAME_COUNT);
-      const heroTransitionStart = Math.max(0.965, 1 - 5 / FRAME_COUNT);
+      const heroFadeEnd = 0.78;
+      const heroTransitionStart = 0.92;
       const heroTransitionDuration = 1 - heroTransitionStart;
 
       timeline = gsap.timeline({ paused: true });
       timeline
         .to(copyRef.current, { yPercent: -9, scale: 0.68, autoAlpha: 0, duration: heroFadeEnd, ease: "none" }, 0)
         .to(navRef.current, { y: -14, scale: 0.9, autoAlpha: 0, duration: heroFadeEnd * 0.64, ease: "none" }, 0)
-        .to(canvasRef.current, { scale: 1.08, yPercent: -1.2, duration: 1, ease: "none" }, 0)
+        .to(videoRef.current, { scale: 1.08, yPercent: -1.2, duration: 1, ease: "none" }, 0)
         .to(
           frameShellRef.current,
           {
@@ -338,13 +329,30 @@ export default function HeroScrollVideo() {
       applyProgress(0);
     };
 
+    const simulatedProgressId = window.setInterval(() => {
+      if (!isMounted || abort.signal.aborted || isReadyRef.current) return;
+      const simulated = Math.min(80, loadingProgressRef.current + 2);
+      pushProgress(simulated);
+    }, 40);
+
     const initExperience = async () => {
+      pushProgress(8);
       setupScroll();
-      await preloadFrames().catch(() => undefined);
+      await waitForVideoReady();
       if (!isMounted || abort.signal.aborted) return;
+
+      await Promise.race([
+        document.fonts.ready,
+        new Promise<void>((resolve) => window.setTimeout(resolve, 800))
+      ]);
+
+      window.scrollTo(0, 0);
+      if (lenis) {
+        lenis.scrollTo(0, { immediate: true, force: true });
+      }
       setupScroll();
       ScrollTrigger.refresh(true);
-      lenis.start();
+      lenis?.start();
       applyProgress(0);
       finishLoading();
     };
@@ -352,7 +360,6 @@ export default function HeroScrollVideo() {
     void initExperience();
 
     const handleResize = () => {
-      renderFrame(currentFrameRef.current);
       ScrollTrigger.refresh(true);
       if (isReadyRef.current) applyProgress(scrollTrigger?.progress ?? 0);
     };
@@ -367,8 +374,9 @@ export default function HeroScrollVideo() {
       abort.abort();
       window.clearInterval(simulatedProgressId);
       document.body.style.overflow = previousOverflow;
-      gsap.ticker.remove(lenisTicker);
-      lenis.destroy();
+      if (videoSyncRafRef.current) cancelAnimationFrame(videoSyncRafRef.current);
+      if (lenisTicker) gsap.ticker.remove(lenisTicker);
+      lenis?.destroy();
       lenisRef.current = null;
       registerLenis(null);
       resizeObserver?.disconnect();
@@ -390,7 +398,20 @@ export default function HeroScrollVideo() {
         <div ref={frameShellRef} className="hero-frame-shell" aria-hidden="true">
           <div className="hero-mist-overlay pointer-events-none absolute inset-0 z-[2]" />
           <HeroParallaxFrame>
-            <canvas ref={canvasRef} className="hero-canvas pointer-events-none absolute inset-0 z-0 h-full w-full" />
+            <video
+              ref={videoRef}
+              className="hero-canvas pointer-events-none absolute inset-0 z-0 h-full w-full object-cover"
+              src={heroVideoSrc}
+              poster={HERO_POSTER}
+              muted
+              playsInline
+              preload="metadata"
+              onError={() => {
+                if (heroVideoSrc !== HERO_VIDEO_FALLBACK) setHeroVideoSrc(HERO_VIDEO_FALLBACK);
+              }}
+              // Scrubbed by scroll — never autoplay as a timeline video.
+              // eslint-disable-next-line jsx-a11y/media-has-caption
+            />
           </HeroParallaxFrame>
         </div>
 
@@ -408,12 +429,14 @@ export default function HeroScrollVideo() {
               />
             </div>
             <div className="hero-bot-video-dialog">
-              <HeroVideoDialog
-                animationStyle="top-in-bottom-out"
-                videoSrc="/videos/rav-bot.mp4"
-                thumbnailSrc="/videos/rav-bot-poster.jpg"
-                thumbnailAlt="Rav bot video"
-              />
+              {isReady ? (
+                <HeroVideoDialog
+                  animationStyle="top-in-bottom-out"
+                  videoSrc="/videos/rav-bot-lite.mp4"
+                  thumbnailSrc="/videos/rav-bot-poster.jpg"
+                  thumbnailAlt="Rav bot video"
+                />
+              ) : null}
             </div>
           </div>
         </div>
@@ -423,7 +446,6 @@ export default function HeroScrollVideo() {
             <KnowledgeHeroOverlay navRef={navRef} isReady={isReady} />
           </div>
         </div>
-
       </div>
 
       <div

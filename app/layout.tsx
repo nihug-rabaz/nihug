@@ -3,8 +3,8 @@ import "lenis/dist/lenis.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "המותג שלך - חוויה קולנועית",
-  description: "Hero קולנועי בעברית עם גלילה אינטראקטיבית."
+  title: "הרבנות הצבאית | פורטל המערכות",
+  description: "פורטל המערכות והשירותים הדיגיטליים של הרבנות הצבאית — גישה מהירה לכל המוצרים החיים."
 };
 
 export default function RootLayout({

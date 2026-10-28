@@ -1,22 +1,26 @@
-import AboutSection from "@/components/AboutSection";
-import BranchesShowcaseSection from "@/components/BranchesShowcaseSection";
-import HeroScrollVideo from "@/components/HeroScrollVideo";
-import OceanFooterSection from "@/components/OceanFooterSection";
-import ProjectsShowcaseSection from "@/components/ProjectsShowcaseSection";
-import RootsDescentSection from "@/components/RootsDescentSection";
-import ScrollCapabilitiesSection from "@/components/ScrollCapabilitiesSection";
+import dynamic from "next/dynamic";
+import PortalMainTabs from "@/components/portal/PortalMainTabs";
+import PortalSiteNav from "@/components/portal/PortalSiteNav";
 
-const ENDING: "ocean" | "roots" = "roots";
+const HeroScrollVideo = dynamic(() => import("@/components/HeroScrollVideo"), {
+  ssr: false,
+  loading: () => (
+    <div
+      className="min-h-[100svh] w-full bg-[var(--color-canvas-ice)]"
+      aria-hidden="true"
+    />
+  )
+});
 
 export default function Home() {
   return (
-    <main>
-      <HeroScrollVideo />
-      <ScrollCapabilitiesSection />
-      <ProjectsShowcaseSection />
-      <AboutSection />
-      <BranchesShowcaseSection />
-      {ENDING === "roots" ? <RootsDescentSection /> : <OceanFooterSection />}
-    </main>
+    <>
+      <PortalSiteNav variant="top" />
+      <main className="portal-page portal-page--with-hero portal-page--has-fixed-nav">
+        <HeroScrollVideo />
+        <PortalMainTabs />
+      </main>
+      <PortalSiteNav variant="bottom" />
+    </>
   );
 }

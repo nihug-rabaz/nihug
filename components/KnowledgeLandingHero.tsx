@@ -1,6 +1,8 @@
 ﻿"use client";
 
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import type { MouseEvent, Ref } from "react";
 import { MusicPlayer } from "@/components/ui/music-player";
@@ -36,6 +38,26 @@ const projects = [
 
 const carouselItems = [...projects, ...projects, ...projects, ...projects];
 
+function KnowledgeHeroBrand({ onLogoClick }: { onLogoClick?: () => void }) {
+  return (
+    <div className="knowledge-hero-brand-pair">
+      <div className="knowledge-hero-brand knowledge-hero-brand--static" aria-label="רבנות צבאית">
+        <Image src="/logo-rabbanut.png" alt="סמל הרבנות הצבאית" width={52} height={52} priority />
+        <span>רבנות צבאית</span>
+      </div>
+      <button
+        className="knowledge-hero-brand"
+        type="button"
+        aria-label="תחום ניהו״ג — פתח נגן מוזיקה"
+        onClick={onLogoClick}
+      >
+        <Image src="/logo-nihug.png" alt="סמל תחום ניהו״ג" width={52} height={52} priority />
+        <span>תחום ניהו״ג</span>
+      </button>
+    </div>
+  );
+}
+
 function KnowledgeHeroNav({
   navRef,
   onLogoClick
@@ -43,24 +65,40 @@ function KnowledgeHeroNav({
   navRef?: Ref<HTMLElement>;
   onLogoClick?: () => void;
 }) {
+  const pathname = usePathname();
+  const onNihugPage = pathname?.startsWith("/nihug");
+
   const goTo = (target: string) => (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     scrollToSection(target);
   };
 
+  const goToPortalTab = (target: string) => (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    const id = target.replace(/^#/, "");
+    window.location.hash = id;
+  };
+
   return (
     <header ref={navRef} className="knowledge-hero-nav">
-      <nav className="knowledge-hero-tabs" aria-label="ניווט ראשי">
-        <a href="#home" onClick={goTo("#home")}>בית</a>
-        <a href="#work" onClick={goTo("#work")}>פרויקטים</a>
-        <a href="#branches" onClick={goTo("#branches")}>ענפים</a>
-        <a href="#structure" onClick={goTo("#structure")}>מבנה</a>
-      </nav>
+      {onNihugPage ? (
+        <nav className="knowledge-hero-tabs" aria-label="ניווט ראשי">
+          <Link href="/">פורטל</Link>
+          <a href="#work" onClick={goTo("#work")}>
+            פרויקטים
+          </a>
+          <a href="#branches" onClick={goTo("#branches")}>
+            ענפים
+          </a>
+          <a href="#structure" onClick={goTo("#structure")}>
+            מבנה
+          </a>
+        </nav>
+      ) : (
+        <nav className="knowledge-hero-tabs knowledge-hero-tabs--spacer" aria-hidden="true" />
+      )}
 
-      <button className="knowledge-hero-brand" type="button" aria-label="פתח נגן מוזיקה" onClick={onLogoClick}>
-        <Image src="/logo-hover-player.png" alt="" width={52} height={52} priority />
-        <span>רבנות צבאית</span>
-      </button>
+      <KnowledgeHeroBrand onLogoClick={onLogoClick} />
     </header>
   );
 }
@@ -70,7 +108,7 @@ function HeroLogoMusicReveal({ isOpen }: { isOpen: boolean }) {
     <div className={`hero-logo-music-shell ${isOpen ? "is-open" : ""}`}>
       <MusicPlayer
         src="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-        coverArt="/logo-hover-player.png"
+        coverArt="/logo-nihug.png"
         className="w-full max-w-sm"
       />
     </div>
@@ -78,15 +116,25 @@ function HeroLogoMusicReveal({ isOpen }: { isOpen: boolean }) {
 }
 
 function KnowledgeHeroCopy() {
+  const pathname = usePathname();
+  const onNihugPage = pathname?.startsWith("/nihug");
+
   return (
     <div className="knowledge-hero-copy">
       <h1 className="knowledge-title">
-        <span>הכירו את תחום ניהול הידע</span>
-        <span>ויכולתה ברבנות הצבאית</span>
+        {onNihugPage ? (
+          <>
+            <span>הכירו את תחום ניהול הידע</span>
+            <span>ויכולתה ברבנות הצבאית</span>
+          </>
+        ) : (
+          <>
+            <span>רבנות צבאית</span>
+            <span>פורטל המערכות והאפליקציות</span>
+          </>
+        )}
       </h1>
-      <p>
-        תיק הפרויקטים שלנו
-      </p>
+      <p>{onNihugPage ? "תיק הפרויקטים שלנו" : "גישה מהירה לכל המערכות של תחום ניהו״ג"}</p>
     </div>
   );
 }
